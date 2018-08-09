@@ -1,1 +1,41 @@
 symbology-ti
+* Questions
+** TODO how to store the pictures
+   What's the best way to store the svg and bmp files used in the symbols? It
+   ispossible to embed the images into the symbols' QGIS xml? The resources
+   plugin can be a good solution?
+** TODO how to export the png files
+   How the legends or the preview in the style manager are created in QGIS? 
+** TODO UC1/UC2 - A intermediate file
+   An intermediate file is needed or better to work directly on the symbols xml?
+   Using directly the symbols xml, maybe we have to set default values when
+   something is not correctly readed from the esri file and that means that is
+   impossible to know which are the non readed values. With a intermediate
+   file, we can let them blank.
+* Engineering
+** Use cases
+*** UC1 Export symbols from ESRI files
+    The user lauches a tool that read the esri .style and exports all the symbol
+    data into a format usable to automatically generate the QGIS symbols but
+    also manually editable.
+*** UC2 Generate symbols in QGIS
+    The user launches a tool that read a file with the description of the
+    symbols and creates the symbols in QGIS (see UC1)
+*** UC3 Customize manually the symbols
+    The user opens the intermediate file and manually make the wanted corrections.
+*** UC4 Generate a QGIS project with all the symbols
+    The user launches a tool that creates a qgis project, 3 geopackages layer
+    (point, line, polygon) and for each symbol a geometry is created with the
+    correct style defined into the layer. 
+*** UC5 Generate png images from the symbols
+    The user launches a tool that creates a png image for each symbol. The
+    scale, offset, etc. of the result is configurable for each symbol.
+*** UC6 Generate the xml style library with all the symbols
+    The user export the xml style library using the default QGIS feature from
+    the style manager.
+*** UC7 Export used characters
+    The user launch a tool that convert all the used esri characters into svg
+    images.
+** Requirements
+   Note: make a requirement for each type of symbol content to be exported
+   (e.g. esri characters, bmp images, ...)
