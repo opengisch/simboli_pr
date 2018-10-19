@@ -1,0 +1,308 @@
+* Settings
+* Esri style file reverse engineering
+  This file contains my notes about the structure of the Esri style files. The
+  base used for the test are the 1203 symbols of the regional planning symbology
+  of the Canton Ticino.
+
+  The base information come from Nyall Dawson's
+  https://github.com/nyalldawson/esri_style_specs/ project.
+ 
+  I already exported the binary data from the .style file, usign Nyall's
+  ~extract_bin~ tool. Now they are stored in the ~bin~ directory. 
+
+  Files have 3 different prefixes:
+  - /P_/ for marker symbols (points)
+  - /L_/ for line symbols
+  - /S_/ for fill symbols (surfaces) 
+** Used codes
+   According to Nyall's documentation, each symbol's layer contains a two bytes
+   code indicating the symbol type followed by a unknown sequence that it's
+   always the same ~14 79 92 C8 D0 11 8B B6 08 00 09 EE 4E 41~.
+   I want to extract all the codes used in my 1203 symbols to verify how many of
+   them are not currently managed by Nyall's tool. 
+
+#+BEGIN_SRC python :dir bin :results verbatim :session rev
+  import binascii
+  import re
+  from os import listdir
+
+
+  def get_all_symbol_codes_in_a_file(file):
+      hex_data = binascii.hexlify(open(file, "rb").read())
+      rx = re.compile(b"(....)147992c8d0118bb6080009ee4e41")
+      return rx.findall(hex_data)
+
+
+  def get_all_symbol_codes():
+      all_codes = set()
+      for f in listdir("."):
+          codes = get_all_symbol_codes_in_a_file(f)
+          all_codes |= set(codes)
+      return all_codes
+
+
+  get_all_symbol_codes()
+#+END_SRC
+
+   #+RESULTS:
+   : {b'fee5', b'ffe5', b'00e6', b'02e6', b'08e6', b'fae5', b'03e6', b'fce5', b'04e6', b'fde5', b'06e6', b'fbe5', b'f9e5'}
+
+
+   Among these codes: 
+   - fee5 -> recognized by the tool as SimpleMarkerSymbolLayer
+   - f9e5 -> recognized as SimpleLineSymbolLayer
+   - 04e6 -> recognized as FillSymbol
+   - fae5 -> recognized as LineSymbol
+   - fbe5 -> recognized as CartographicLineSymbolLayer
+   - 03e6 -> recognized as SimpleFillSymbolLayer
+   - 00e6 -> recognized as CharacterMarkerSymbolLayer
+   - ffe5 -> recognized an MarkerSymbol
+   - 02e6 -> not recognized (commented into the code as PictureMarkerSymbolLayer)
+   - fde5 -> not recognized
+   - 06e6 -> not recognized
+   - 08e6 -> not recognized
+   - fce5 -> not recognized
+   So we have 8 recognized and managed and 5 not recognized types.
+** Used codes by geometry type
+   I extract now the used codes, grouped by the geometry type of my symbols,
+   identified by the prefix (e.g. /L_/)
+*** Points
+    #+BEGIN_SRC python :dir bin :results pp :session rev
+     from fnmatch import filter
+
+     def get_all_symbol_codes_by_prefix(prefix):
+         all_codes = set()
+         for f in filter(listdir("."), prefix):
+             codes = get_all_symbol_codes_in_a_file(f)
+             all_codes |= set(codes)
+         return all_codes
+
+     get_all_symbol_codes_by_prefix("P_*")
+    #+END_SRC
+
+    #+RESULTS:
+	: {b'03e6', b'fee5', b'ffe5', b'00e6', b'02e6', b'04e6', b'f9e5'}
+
+*** Lines
+    #+BEGIN_SRC python :dir bin :results verbatim :session rev
+     get_all_symbol_codes_by_prefix("L_*")
+    #+END_SRC
+
+   #+RESULTS:
+   : {b'03e6', b'fee5', b'ffe5', b'00e6', b'02e6', b'08e6', b'fce5', b'04e6', b'fde5', b'fae5', b'fbe5', b'f9e5'}
+
+*** Polygons
+    #+BEGIN_SRC python :dir bin :results verbatim :session rev
+     get_all_symbol_codes_by_prefix("S_*")
+    #+END_SRC
+
+   #+RESULTS:
+   : {b'03e6', b'ffe5', b'00e6', b'08e6', b'fce5', b'04e6', b'fde5', b'fae5', b'06e6', b'fbe5', b'f9e5'}
+
+*** Notes
+	- all the codes except ~06e6~ are used in at least 2 different geomery types.
+	- I tend to think that each code represents a symbol layer and there are no
+      special codes for the whole symbol. For example the code ~04e6~ that Nyall
+      identified as a FillSymbol, I found it in all 3 geometry types.
+
+*** TODO symbols with only a code
+*** TODO export list of all the codes in a symbol 
+*** TODO try to determine each code
+** Analyse in ArcMap
+*** P_26_126_0005
+    - I found only fee5
+    - ArcMap says Simple Marker Symbol
+*** P_26_126_0006
+    - I found only fee5
+    - ArcMap says Simple Marker Symbol
+*** P_26_125_0014
+    - I found ffe5, 03e6, f9e5
+    - ArcMap: Arrow Marker Symbol
+*** P_27_128_0011
+    - ffe5, 03e6, f9e5, 00e6
+    - ArcMap: Character Marker Symbol
+*** P_26_126_0016
+    - ffe5, 03e6, f9e5, fee5
+    - ArcMap: Simple Marker Symbol
+*** P_33_167_0001
+    - ffe5, 03e6, f9e5, 00e6, 00e6
+    - 2x Character Marker Symbol
+*** S_14_047_0014
+    - 03e6, f9e5
+    - Simple Fill Symbol
+*** S_01_081_0011
+    - 04e6, 03e6, fbe5
+    - Simple Fill Symbol
+*** S_06_027_0013
+    - 04e6,06e6,fbe5,fbe5,06e6,fbe5,fae5,f9e5
+      - 04e6
+      - 2x 06e6
+      - 3x fbe5
+      - fae5
+      - f9e5
+    - 2x Line Fill Symbol
+*** P_26_125_0001
+    - ffe5, 03e6, f9e5, 00e6
+    - Character Marker Symbol
+* Nyall's symbol and symbol layers types
+** Symbol
+   - LineSymbol - fae5
+   - FillSymbol - 04e6
+   - MarkerSymbol - ffe5
+** SymbolLayer
+   - LineSymbolLayer 
+     - SimpleLineSymbolLayer - f9e5
+     - CartographicLineSymbolLayer - fbe5
+   - FillSymbolLayer
+     - SimpleFillSymbolLayer - 03e6
+   - MarkerSymbolLayer
+     - SimpleMarkerSymbolLayer - fee5
+     - CharacterMarkerSymbolLayer - 00e6
+* my codes found in files
+** Fill
+   - fde5 - new
+   - fae5 - Nyall says that is the code of a LineSymbol ??
+   - 04e6 
+   - fbe5 
+   - 00e6
+   - fce5 - new
+   - 03e6 
+   - 06e6 - new
+   - ffe5 - Nyall says that is the code of a MarkerSymbol
+   - f9e5 
+   - 08e6 - new
+** Marker
+   - 04e6
+   - 00e6
+   - fee5
+   - 03e6
+   - ffe5
+   - 02e6 - new PictureMarkerSymbolLayer ?
+   - f9e5 
+** Line
+   - fde5 - new
+   - fae5
+   - 04e6
+   - fbe5
+   - f9e5
+   - fee5
+   - fce5 - new
+   - 03e6
+   - ffe5 - Nyall says that is a MarkerSymbol
+   - 02e6 - new PictureMarkerSymbolLayer ?
+   - 00e6
+   - 08e6 - new
+** My notes and ideas
+   - All the marker symbols are either (without repetitions)
+     - ['fee5'] t
+     - ['ffe5', 'f9e5', '03e6'] t
+     - ['fee5', 'ffe5', 'f9e5', '03e6'] t
+     - ['ffe5', 'f9e5', '03e6', '00e6'] t 
+     - ['ffe5', '02e6', 'f9e5', '03e6'] t
+     - ['fee5', 'ffe5', 'f9e5', '03e6', '00e6'] t
+     - ['04e6', 'ffe5', 'f9e5', '03e6', '00e6'] t
+   - All the line symbols are either
+     - ['f9e5'] t
+     - ['fae5', 'fbe5'] t
+     - ['fce5', 'fae5', 'fbe5'] t
+     - ['fee5', 'fde5', 'fae5'] t
+     - ['ffe5', '03e6', 'fae5', 'fbe5', 'f9e5'] t
+     - ['fde5', 'fae5', 'f9e5', '03e6', 'ffe5', '00e6'] t
+     - ['fae5', 'fbe5', 'f9e5', '03e6', 'ffe5', '00e6'] t
+     - ['fde5', 'fae5', '03e6', 'ffe5', '02e6', 'f9e5'] t
+     - ['fde5', 'fae5', 'fbe5', 'fee5', '03e6', 'ffe5', 'f9e5'] t
+     - ['fde5', 'fae5', 'fbe5', '00e6', '03e6', 'ffe5', 'f9e5'] t
+     - ['fde5', 'fae5', '04e6', '00e6', '03e6', 'ffe5', 'f9e5', '08e6'] t
+   - All the fill symbols are either
+     - ['f9e5', '03e6']
+     - ['04e6', 'fae5', 'f9e5']
+     - ['04e6', 'f9e5', '03e6']
+     - ['04e6', 'fbe5', '06e6']
+     - ['04e6', 'fbe5', '03e6']
+     - ['04e6', 'fae5', 'fbe5']
+     - ['04e6', 'f9e5', '06e6']
+     - ['04e6', 'fbe5', 'fae5', '03e6']
+     - ['04e6', 'fae5', 'fbe5', '06e6']
+     - ['04e6', 'f9e5', 'fbe5', '06e6']
+     - ['04e6', 'fae5', '03e6', 'f9e5']
+     - ['04e6', 'f9e5', '03e6', '06e6']
+     - ['04e6', 'fae5', 'f9e5', '06e6']
+     - ['04e6', 'fbe5', 'fae5', '03e6', '06e6']
+     - ['04e6', 'f9e5', 'fae5', 'fbe5', '06e6']
+     - ['04e6', 'fae5', 'f9e5', '03e6', '06e6']
+     - ['04e6', 'fce5', 'fbe5', 'fae5', '03e6']
+     - ['04e6', 'fbe5', 'f9e5', '03e6', '06e6']
+     - ['fae5', '04e6', 'fbe5', '03e6', '06e6', 'f9e5']
+     - ['08e6', '04e6', 'f9e5', '03e6', 'ffe5', '00e6']
+     - ['08e6', '04e6', 'fbe5', '00e6', '03e6', 'ffe5', 'f9e5']
+     - ['fae5', '04e6', 'fbe5', 'fce5', '03e6', '06e6', 'f9e5']
+     - ['fde5', 'fae5', '04e6', '00e6', '03e6', 'ffe5', 'f9e5']
+     - ['fde5', 'fae5', '04e6', 'fbe5', '00e6', '03e6', 'ffe5', 'f9e5']
+* 20180924
+  - I don't have always the correct terminator. E.g. in S_14_047_0014 the
+    terminator is d00000002000000 not d0000000000000... So maybe the terminator
+    is only d000000?
+    Lines and fill have other terminators than ..00..
+    The others are 01, 02, 03, 04, 05, 06, 07, 08, 09, 0a, 0b, 0c, 0d, 0e, 0f,
+    10, 11, 12, 13, 14, 1b
+** Status
+*** Status 
+    The conversion of our 1203 symbols with slyr give these results:
+**** Current situation
+***** Fill symbols (starting with 'S_')
+      - Parsing completed: 316
+      - Unknown guid: 56
+        E.g. ~S_01_001_0005~
+        Slyr identifies a wrong guid. Probably caused by some unknown codes before
+        the correct guid        
+      - Unsupported version: 0
+      - Not implemented: 327
+        - PictureFillSymbol 
+          E.g. ~S_14_049_0001~
+        - LineFillSymbol
+          E.g. ~S_01_089_0006~
+        - MarkerFillSymbol
+          E.g. ~S_12_044_0006~
+      - Unreadable: 198
+        E.g. ~S_01_081_0002~
+        I have a lot of different terminators ('0d00000001000000',
+        '0d00000002000000', ..03.., 04, 05, 06, 07, 08, 09, a0, b0, c0, d0, e0,
+        f0, 10, 11, 12, 13, 14, 16, 1b, 28, 29)
+***** Line symbols (starting with 'L_')
+      - Parsing completed: 119
+      - Unknown guid: 13
+        E.g. ~L_25_116_0003~
+        Slyr identifies a wrong guid. Probably caused by some unknown codes before
+        the correct guid        
+      - Unsupported version: 18
+        E.g. ~L_21_107_0003~
+        CharacterMarkerSymbolLayer version 3 instead of 4
+      - Not implemented: 6
+        - PictureMarkerSymbol
+          E.g. ~L_20_099_0011~
+        - MarkerFillSymbol
+          E.g. ~L_22_092_0002~
+      - Unreadable: 47
+        Different terminators as for fill symbols, and some apparently reading
+        wrong position of a terminator E.g. ~L_19_101_0002~
+***** Marker symbols (starting with 'P_')
+       - Parsing completed: 14
+       - Unknown guid: 11
+         E.g. ~P_26_125_0009~
+         Are all symbols with rotation. What slyr try to identify as guid is
+         actually an angle
+       - Unsupported version: 83
+         E.g. ~P_26_120_0016~
+         CharacterMarkerSymbolLayer version 3 instead of 4
+       - Not implemented: 3
+         E.g. ~P_28_157_0001~
+         PictureMarkerSymbol
+*** Our Priorities
+    1. Fix unreadable symbols
+    2. Support CharacterMarkerSymbol version 3
+    3. Support LineFillSymbol
+    4. Support MarkerFillSymbol
+    5. Conversion of the result to qgis symbols (Qgis 2.18)
+    6. Support PictureMarkerSymbol
+
+

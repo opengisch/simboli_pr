@@ -13,6 +13,8 @@ symbology-ti
    impossible to know which are the non readed values. With a intermediate
    file, we can let them blank.
 * Engineering
+** Purpose
+** Glossary
 ** Use cases
 *** UC1 Export symbols from ESRI files
     The user lauches a tool that read the esri .style and exports all the symbol
