@@ -1,0 +1,3 @@
+[submodule "slyr"]
+	path = slyr
+	url = git@github.com:nyalldawson/slyr.git
