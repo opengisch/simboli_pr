@@ -1,7 +1,11 @@
+# To be run into QGIS2 python console
+
 from qgis.core import (
     QgsStyleV2, QgsMapLayerRegistry, QgsVectorLayer, QgsFeature,
     QgsGeometry, QgsPoint, QgsCategorizedSymbolRendererV2,
-    QgsRendererCategoryV2)
+    QgsRendererCategoryV2, QgsSymbolLayerV2Utils, QgsRenderContext)
+
+from qgis.PyQt.QtCore import QSize
 
 
 class SymbologyProject(object):
@@ -75,73 +79,41 @@ class SymbologyProject(object):
                 self.draw_feature_with_symbol(
                     start_x + (step_x * i),
                     start_y + (step_y * i),
-                    symbol_name.strip())
+                    symbol_name)
+
+    def save_pictures_from_list(self, file_name):
+        size_x = 100
+        size_y = 100
+        output_directory = "/home/mario/workspace/repos/symbology-ti/ti-utils/output/png/"
+
+        # TODO provare i vari parametri
+        context = QgsRenderContext()
+        context.setScaleFactor(20)
+        
+        with open(file_name) as f:
+            for i, symbol_name in enumerate(f.readlines()):
+                print(i)
+                print(symbol_name)
+                pixmap = QgsSymbolLayerV2Utils.symbolPreviewPixmap(
+                    self.get_symbol(symbol_name), QSize(size_x, size_y), context)
+                print(pixmap)
+                filename = output_directory + symbol_name.strip() + ".png"
+                print(filename)
+                pixmap.save(filename, "PNG")
 
     def get_symbol(self, symbol_name):
         """Return the QgsSymbolV2 or None if not found"""
 
         style = QgsStyleV2().defaultStyle()
-        return style.symbol(symbol_name)
+        return style.symbol(symbol_name.strip())
 
 
 if __name__ in ['__main__', '__console__']:
     symbology_project = SymbologyProject()
-    symbology_project.create_layers()
+    #symbology_project.create_layers()
 
-#    symbology_project.draw_point_with_symbol(2710000, 1114000, 'P_26_120_0001')
-    symbology_project.draw_symbols_from_list(
+    #symbology_project.draw_symbols_from_list(
+    #    '/home/mario/workspace/repos/symbology-ti/ti-utils/fase1.txt')
+
+    symbology_project.save_pictures_from_list(
         '/home/mario/workspace/repos/symbology-ti/ti-utils/fase1.txt')
-
-
-
-def draw_lines():
-    # get the layer 
-    # set in edit mode
-    layer = iface.activeLayer()
-    vpr = layer.dataProvider()
-    
-    features = []
-    for i in range(10):
-        f = QgsFeature()
-        points = []
-        points.append(QgsPoint(
-            start_x + (step_x * i), start_y + (step_y * i)))
-        points.append(QgsPoint(
-            start_x + (step_x * i) + 10, start_y + (step_y * i)))
-        line = QgsGeometry.fromPolyline(points)
-        f.setGeometry(line)
-        features.append(f)
-    vpr.addFeatures(features)
-    layer.updateExtents()
-
-def draw_polygons():
-    # get the layer 
-    # set in edit mode
-    layer = iface.activeLayer()
-    vpr = layer.dataProvider()
-    
-    features = []
-    for i in range(10):
-        f = QgsFeature()
-        points = []
-        points.append(QgsPoint(
-            start_x + (step_x * i), start_y + (step_y * i)))
-        points.append(QgsPoint(
-            start_x + (step_x * i) + 10, start_y + (step_y * i)))
-        points.append(QgsPoint(
-            start_x + (step_x * i) + 10, start_y + (step_y * i) + 10))
-        points.append(QgsPoint(
-            start_x + (step_x * i), start_y + (step_y * i) + 10))
-        points.append(QgsPoint(
-            start_x + (step_x * i), start_y + (step_y * i)))
-        poly = QgsGeometry.fromPolygon([points])
-        f.setGeometry(poly)
-        features.append(f)
-    vpr.addFeatures(features)
-    layer.updateExtents()
-
-
-
-
-
-
