@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg viewBox="0.453125 -4.375 4 3.84375"
+ xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  version="1.2" baseProfile="tiny">
+<title>Qt SVG Document</title>
+<desc>Generated with Qt</desc>
+<defs>
+</defs>
+<g fill="none" stroke="black" stroke-width="1" fill-rule="evenodd" stroke-linecap="square" stroke-linejoin="bevel" >
+
+<g fill="#ffff00" fill-opacity="1" stroke="none" transform="matrix(1,0,0,1,0,0)"
+font-family="ESRI Default Marker" font-size="5" font-weight="400" font-style="normal" 
+>
+<path vector-effect="none" fill-rule="nonzero" d="M4.45313,-3.01563 L3.21875,-2.04688 L3.71875,-0.53125 L2.42188,-1.48438 L1.1875,-0.546875 L1.67188,-2.04688 L0.453125,-3.01563 L1.96875,-3.01563 L2.42188,-4.375 L2.875,-3.01563 L4.45313,-3.01563"/>
+</g>
+</g>
+</svg>

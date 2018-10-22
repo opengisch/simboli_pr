@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg viewBox="0 -9.0625 9.09375 9.0625"
+ xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  version="1.2" baseProfile="tiny">
+<title>Qt SVG Document</title>
+<desc>Generated with Qt</desc>
+<defs>
+</defs>
+<g fill="none" stroke="black" stroke-width="1" fill-rule="evenodd" stroke-linecap="square" stroke-linejoin="bevel" >
+
+<g fill="#000000" fill-opacity="1" stroke="none" transform="matrix(1,0,0,1,0,0)"
+font-family="ESRI Default Marker" font-size="10" font-weight="400" font-style="normal" 
+>
+<path vector-effect="none" fill-rule="nonzero" d="M9.09375,-5.32813 L9.09375,-3.70313 L6.54688,-3.70313 L8.34375,-1.89063 L7.17188,-0.734375 L5.375,-2.53125 L5.375,0 L3.71875,0 L3.71875,-2.53125 L1.92188,-0.734375 L0.75,-1.89063 L2.54688,-3.70313 L0,-3.70313 L0,-5.32813 L2.54688,-5.32813 L0.734375,-7.14063 L1.90625,-8.3125 L3.71875,-6.5 L3.71875,-9.0625 L5.375,-9.0625 L5.375,-6.5 L7.1875,-8.3125 L8.34375,-7.14063 L6.54688,-5.32813 L9.09375,-5.32813 M8.8125,-5.0625 L5.85938,-5.0625 L7.95313,-7.15625 L7.1875,-7.9375 L5.09375,-5.84375 L5.09375,-8.79688 L4,-8.79688 L4,-5.84375 L1.90625,-7.9375 L1.14063,-7.15625 L3.23438,-5.0625 L0.28125,-5.0625 L0.28125,-3.96875 L3.23438,-3.96875 L1.15625,-1.875 L1.92188,-1.10938 L4,-3.20313 L4,-0.265625 L5.09375,-0.265625 L5.09375,-3.20313 L7.17188,-1.10938 L7.9375,-1.875 L5.85938,-3.96875 L8.8125,-3.96875 L8.8125,-5.0625"/>
+</g>
+</g>
+</svg>
