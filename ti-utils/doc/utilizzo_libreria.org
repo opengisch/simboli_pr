@@ -1,0 +1,28 @@
+* Manuale di utilizzo della simbologia degli atti pianificatori del Canton Ticino per QGIS
+  La libreria comprendente la simbologia degli atti pianificatori del Canton
+  Ticino per QGIS (di seguito chiamata /libreria/) è composta da:
+  - un file =libreria.xml= contenente la definizione di tutti i simboli
+  - una directory contenente le immagini =svg= utilizzate nei simboli (327)
+** Requisiti 
+   La libreria è stata creata per essere compatibile con QGIS 2.18
+** Installazione in QGIS
+*** SVG path
+    Prima di importare la libreria =xml= è necessario configurare in QGIS dove si
+    trova la directory con le immagini. 
+    In =Impostazioni > Opzioni -> Sistema -> Percorsi SVG= è possibile aggiungere il percorso
+    della directory.
+    [[file:./path_svg.png]]
+*** Import della libreria
+    Aprendo il gestore di stili dal menu =Impostazioni > Gestore di sili= è
+    possibile importare a scelta alcuni o tutti i simboli tramite il file =libreria.xml=
+    [[file:./import_xml.png]]
+
+    [[file:./import_symbols.png]]
+    A questo punti i simboli sono pronti ad essere utilizzati.
+    [[file:./imported_symbols.png]]
+** Possibili problemi
+   Nel caso venga importata la libreria senza che sia definito il percorso dei
+   file svg, oppure se la directory con i file svg viene spostata, i simboli che
+   utilizzano immagini svg appariranno come dei punti interrogativi. Per
+   risolvere il problema è sufficiente impostare il percorso correttamente e
+   riavviare QGIS. 
