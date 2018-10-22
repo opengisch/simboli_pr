@@ -1,43 +1,60 @@
-symbology-ti
-* Questions
-** TODO how to store the pictures
-   What's the best way to store the svg and bmp files used in the symbols? It
-   ispossible to embed the images into the symbols' QGIS xml? The resources
-   plugin can be a good solution?
-** TODO how to export the png files
-   How the legends or the preview in the style manager are created in QGIS? 
-** TODO UC1/UC2 - A intermediate file
-   An intermediate file is needed or better to work directly on the symbols xml?
-   Using directly the symbols xml, maybe we have to set default values when
-   something is not correctly readed from the esri file and that means that is
-   impossible to know which are the non readed values. With a intermediate
-   file, we can let them blank.
-* Engineering
-** Purpose
-** Glossary
-** Use cases
-*** UC1 Export symbols from ESRI files
-    The user lauches a tool that read the esri .style and exports all the symbol
-    data into a format usable to automatically generate the QGIS symbols but
-    also manually editable.
-*** UC2 Generate symbols in QGIS
-    The user launches a tool that read a file with the description of the
-    symbols and creates the symbols in QGIS (see UC1)
-*** UC3 Customize manually the symbols
-    The user opens the intermediate file and manually make the wanted corrections.
-*** UC4 Generate a QGIS project with all the symbols
-    The user launches a tool that creates a qgis project, 3 geopackages layer
-    (point, line, polygon) and for each symbol a geometry is created with the
-    correct style defined into the layer. 
-*** UC5 Generate png images from the symbols
-    The user launches a tool that creates a png image for each symbol. The
-    scale, offset, etc. of the result is configurable for each symbol.
-*** UC6 Generate the xml style library with all the symbols
-    The user export the xml style library using the default QGIS feature from
-    the style manager.
-*** UC7 Export used characters
-    The user launch a tool that convert all the used esri characters into svg
-    images.
-** Requirements
-   Note: make a requirement for each type of symbol content to be exported
-   (e.g. esri characters, bmp images, ...)
+* Symbology-ti
+** Engineering
+*** Functional Requirements
+**** FR1 Xml library
+     The result shall include a QGIS style library xml file containing the 1203
+     ESRI symbols converted.
+     - Rationale
+       To not be dependent of ESRI and to conform to OGC.
+     - Fit criterion
+       A QGIS's style xml file containing a QGIS symbol for all the 1203 original
+       ESRI symbols is into the result product.
+**** FR2 QGIS project
+     The result shall include a QGIS project showing all the symbols.
+     - Rationale
+       To be able to look the rendering of all the symbols.
+     - Fit criterion
+       A QGIS project with at least a geometry drown with each symbol is into the
+       result product.
+**** FR3 png files
+     The result shall include a png image of all symbols.
+     - Rationale
+       These png are to be used into pdf documents
+     - Fit criterion
+       A zip folder with a png for each symbol is into the result product.
+**** FR4 png quality
+     The png images shall be 6x3mm and 300dpi at least and represent correctly
+     the symbol.
+     - Rationale 
+       To ensure a good quality of the documents using this images
+     - Fit criterion
+       --
+**** FR5 Conversion of dimensions
+     The point units of the ESRI symbols are to be converted in 0.35mm in QGIS.
+     - Rationale 
+       In QGIS the unit point doesn't exist
+     - Fit criterion 
+       --
+**** FR6 Font ESRI
+     Characters using ESRI fonts are to be converted in svg images.
+     - Rationale 
+       To not be forced to install new fonts on the user computers.
+     - Fit criterion
+       All character of ESRI fonts are converted into a svg image.
+** XML library
+*** Requirements
+    - QGIS3 in python path
+    - Inkscape
+*** Creation
+    #+BEGIN_SRC sh
+      cd ti-utils/
+      python library.py
+    #+END_SRC
+*** Installation in QGIS2
+    - In =Options - System - SVG Paths=, add the path of the svg directory.
+    - Optional
+      - Create a new group in Style manger e.g. libreria
+    - In =Style Manager - Import=, import the xml =libreria.xml= file.
+      - (optional) save into group libreria
+      - Select all
+      - Import 
