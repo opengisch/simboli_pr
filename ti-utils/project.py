@@ -18,19 +18,30 @@ class SymbologyProject(object):
     def create_layers(self):
 
         self.layer_points = QgsVectorLayer(
-            'Point?crs=epsg:2056&field=id:string(13)', 'Points', "memory")
+            'Point?crs=epsg:2056&field=id:string(13)', 'points', "memory")
         self.layer_points.setRendererV2(QgsCategorizedSymbolRendererV2('id'))
 
         self.layer_lines = QgsVectorLayer(
-            'LineString?crs=epsg:2056&field=id:string(13)', 'Lines', "memory")
+            'LineString?crs=epsg:2056&field=id:string(13)', 'lines', "memory")
         self.layer_lines.setRendererV2(QgsCategorizedSymbolRendererV2('id'))
 
         self.layer_polygons = QgsVectorLayer(
-            'Polygon?crs=epsg:2056&field=id:string(13)', 'Polygons', "memory")
+            'Polygon?crs=epsg:2056&field=id:string(13)', 'polygons', "memory")
         self.layer_polygons.setRendererV2(QgsCategorizedSymbolRendererV2('id'))
 
         QgsMapLayerRegistry.instance().addMapLayers(
             [self.layer_points, self.layer_lines, self.layer_polygons])
+
+    def get_layers(self):
+        self.layer_points = QgsMapLayerRegistry.instance().mapLayersByName(
+            'points')[0]
+        self.layer_points.setRendererV2(QgsCategorizedSymbolRendererV2('id'))
+        self.layer_lines = QgsMapLayerRegistry.instance().mapLayersByName(
+            'lines')[0]
+        self.layer_lines.setRendererV2(QgsCategorizedSymbolRendererV2('id'))
+        self.layer_polygons = QgsMapLayerRegistry.instance().mapLayersByName(
+            'polygons')[0]
+        self.layer_polygons.setRendererV2(QgsCategorizedSymbolRendererV2('id'))
 
     def draw_feature_with_symbol(self, pos_x, pos_y, symbol_name):
         if symbol_name.startswith('P_'):
@@ -54,9 +65,9 @@ class SymbologyProject(object):
 
         data_provider = layer.dataProvider()
         feature = QgsFeature()
-
+        feature.setFields(layer.fields())
         feature.setGeometry(geometry)
-        feature.setAttributes([symbol_name])
+        feature['id'] = symbol_name
         data_provider.addFeatures([feature])
         layer.updateExtents()
 
@@ -110,10 +121,11 @@ class SymbologyProject(object):
 
 if __name__ in ['__main__', '__console__']:
     symbology_project = SymbologyProject()
-    #symbology_project.create_layers()
+    # symbology_project.create_layers()
+    symbology_project.get_layers()
 
-    #symbology_project.draw_symbols_from_list(
-    #    '/home/mario/workspace/repos/symbology-ti/ti-utils/fase1.txt')
+    symbology_project.draw_symbols_from_list(
+        '/home/mario/workspace/repos/symbology-ti/ti-utils/fase2.txt')
 
-    symbology_project.save_pictures_from_list(
-        '/home/mario/workspace/repos/symbology-ti/ti-utils/fase1.txt')
+    # symbology_project.save_pictures_from_list(
+    #     '/home/mario/workspace/repos/symbology-ti/ti-utils/fase1.txt')
