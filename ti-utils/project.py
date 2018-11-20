@@ -3,9 +3,7 @@
 from qgis.core import (
     QgsStyleV2, QgsMapLayerRegistry, QgsVectorLayer, QgsFeature,
     QgsGeometry, QgsPoint, QgsCategorizedSymbolRendererV2,
-    QgsRendererCategoryV2, QgsSymbolLayerV2Utils, QgsRenderContext)
-
-from qgis.PyQt.QtCore import QSize
+    QgsRendererCategoryV2)
 
 
 class SymbologyProject(object):
@@ -92,26 +90,6 @@ class SymbologyProject(object):
                     start_y + (step_y * i),
                     symbol_name)
 
-    def save_pictures_from_list(self, file_name):
-        size_x = 100
-        size_y = 100
-        output_directory = "/home/mario/workspace/repos/symbology-ti/ti-utils/output/png/"
-
-        # TODO provare i vari parametri
-        context = QgsRenderContext()
-        context.setScaleFactor(20)
-        
-        with open(file_name) as f:
-            for i, symbol_name in enumerate(f.readlines()):
-                print(i)
-                print(symbol_name)
-                pixmap = QgsSymbolLayerV2Utils.symbolPreviewPixmap(
-                    self.get_symbol(symbol_name), QSize(size_x, size_y), context)
-                print(pixmap)
-                filename = output_directory + symbol_name.strip() + ".png"
-                print(filename)
-                pixmap.save(filename, "PNG")
-
     def get_symbol(self, symbol_name):
         """Return the QgsSymbolV2 or None if not found"""
 
@@ -122,10 +100,7 @@ class SymbologyProject(object):
 if __name__ in ['__main__', '__console__']:
     symbology_project = SymbologyProject()
     # symbology_project.create_layers()
-    symbology_project.get_layers()
+    # symbology_project.get_layers()
 
-    symbology_project.draw_symbols_from_list(
-        '/home/mario/workspace/repos/symbology-ti/ti-utils/fase2.txt')
-
-    # symbology_project.save_pictures_from_list(
-    #     '/home/mario/workspace/repos/symbology-ti/ti-utils/fase1.txt')
+    # symbology_project.draw_symbols_from_list(
+    # '/home/mario/workspace/repos/symbology-ti/ti-utils/fase2.txt')
