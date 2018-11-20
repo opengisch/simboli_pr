@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg viewBox="0 -7.96875 9.5625 7.96875"
+ xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  version="1.2" baseProfile="tiny">
+<title>Qt SVG Document</title>
+<desc>Generated with Qt</desc>
+<defs>
+</defs>
+<g fill="none" stroke="black" stroke-width="1" fill-rule="evenodd" stroke-linecap="square" stroke-linejoin="bevel" >
+
+<g fill="#000000" fill-opacity="1" stroke="none" transform="matrix(1,0,0,1,0,0)"
+font-family="ESRI Fire Incident NFPA" font-size="9" font-weight="400" font-style="normal" 
+>
+<path vector-effect="none" fill-rule="nonzero" d="M9.5625,-7.96875 C9.53125,-7.96875 9.42448,-7.82031 9.24219,-7.52344 C9.0599,-7.22656 8.82813,-6.84635 8.54688,-6.38281 C8.26563,-5.91927 7.95313,-5.40104 7.60938,-4.82813 C7.26563,-4.25521 6.92969,-3.6901 6.60156,-3.13281 C6.27344,-2.57552 5.97135,-2.05729 5.69531,-1.57813 C5.41927,-1.09896 5.19792,-0.721354 5.03125,-0.445313 C4.86458,-0.169271 4.77604,-0.0208333 4.76563,0 L0,-7.96875 L9.5625,-7.96875"/>
+</g>
+</g>
+</svg>

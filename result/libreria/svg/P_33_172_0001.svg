@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   height="24.1094"
+   width="24.1094"
+   id="svg5058"
+   version="1.2"
+   viewBox="0 -23.1094 24.1094 24.1094">
+  <metadata
+     id="metadata5062">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Qt SVG Document</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <title
+     id="title5046">Qt SVG Document</title>
+  <desc
+     id="desc5048">Generated with Qt</desc>
+  <defs
+     id="defs5050" />
+  <g
+     transform="translate(0.5,0.5)"
+     style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#ff0000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="g5056">
+    <g
+       style="font-style:normal;font-weight:400;font-size:25px;font-family:'ESRI Default Marker';fill:#000000;fill-opacity:1;stroke:#ff0000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="g5054"
+       font-style="normal"
+       font-weight="400"
+       font-size="25">
+      <path
+         style="vector-effect:none;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#ff0000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="path5052"
+         d="m 23.1094,-11.5469 c 0,1.58336 -0.3047,3.07815 -0.9141,4.4844 -0.6094,1.40625 -1.4349,2.63281 -2.4765,3.67969 -1.0417,1.04687 -2.2683,1.87239 -3.6797,2.47656 C 14.6276,-0.302083 13.1302,0 11.5469,0 9.96354,0 8.46875,-0.302083 7.0625,-0.90625 5.65625,-1.51042 4.42969,-2.33594 3.38281,-3.38281 2.33594,-4.42969 1.51042,-5.65625 0.90625,-7.0625 0.302083,-8.46875 0,-9.96354 0,-11.5469 c 0,-1.5833 0.302083,-3.0807 0.90625,-4.4922 0.60417,-1.4114 1.42969,-2.638 2.47656,-3.6797 1.04688,-1.0416 2.27344,-1.8671 3.67969,-2.4765 1.40625,-0.6094 2.90104,-0.9141 4.4844,-0.9141 1.5833,0 3.0807,0.3047 4.4922,0.9141 1.4114,0.6094 2.638,1.4349 3.6797,2.4765 1.0416,1.0417 1.8671,2.2683 2.4765,3.6797 0.6094,1.4115 0.9141,2.9089 0.9141,4.4922 m -0.6719,0 c 0,-1.5 -0.2839,-2.9088 -0.8516,-4.2265 -0.5677,-1.3177 -1.3489,-2.474 -2.3437,-3.4688 -0.9948,-0.9948 -2.1511,-1.776 -3.4688,-2.3437 -1.3177,-0.5677 -2.7265,-0.8516 -4.2265,-0.8516 -1.4896,0 -2.89586,0.2839 -4.21877,0.8516 -1.32292,0.5677 -2.47917,1.3489 -3.46875,2.3437 -0.98959,0.9948 -1.77084,2.1511 -2.34375,3.4688 -0.572922,1.3177 -0.85938,2.7265 -0.85938,4.2265 0,1.4896 0.286458,2.89586 0.85938,4.21877 0.57291,1.32292 1.35416,2.47917 2.34375,3.46875 0.98958,0.98959 2.14583,1.77084 3.46875,2.34375 1.32291,0.572922 2.72917,0.85938 4.21877,0.85938 1.5,0 2.9088,-0.286458 4.2265,-0.85938 1.3177,-0.57291 2.474,-1.35416 3.4688,-2.34375 0.9948,-0.98958 1.776,-2.14583 2.3437,-3.46875 0.5677,-1.32291 0.8516,-2.72917 0.8516,-4.21877" />
+    </g>
+  </g>
+</svg>
