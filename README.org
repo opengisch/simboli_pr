@@ -1,4 +1,52 @@
 * Symbology-ti
+** Artefacts creation
+*** XML library
+**** Requirements
+     - QGIS3 in python path
+     - Inkscape
+**** Creation
+     #+BEGIN_SRC sh
+       cd ti-utils/
+       ./create_library.sh
+     #+END_SRC
+**** Fix svg images
+     The emf images are not converted perfectly with Inkscape, so I first
+     convert them with Libreoffice and then again with Inkscape to reduce the
+     page size
+     #+BEGIN_SRC sh
+       libreoffice --headless --convert-to svg *.emf
+       inkscape --file P_33_161_0001.svg --export-area-drawing --export-plain-svg P_33_161_0001.svg
+     #+END_SRC
+**** Fix very thin lines
+     Very thin lines are drawn more pale in QGIS than in Arcgis. So I change
+     the 0.0352778 mm lines (0.1 pt in Arcgis) to 0 (QGIS will use the hairline
+     width for 0 mm lines that is darker)
+     #+BEGIN_SRC sh
+       sed -i -- 's/v="0.0352778"/v="0"/g' libreria.xml   
+     #+END_SRC
+**** Remove all the svg path from the xml
+     #+BEGIN_SRC sh
+       sed -i -- 's/\/home\/mario\/workspace\/repos\/symbology-ti\/result\/libreria\/svg\///g' libreria.xml
+     #+END_SRC
+**** Installation in QGIS2
+     - In =Options - System - SVG Paths=, add the path of the svg directory.
+     - Optional
+       - Create a new group in Style manger e.g. libreria
+     - In =Style Manager - Import=, import the xml =libreria.xml= file.
+       - (optional) save into group libreria
+       - Select all
+       - Import 
+*** PNG images
+    Run the python script =ti-utils/images.py= inside a QGIS2 python console (with the symbol
+    library installed) 
+*** QGIS project
+    Run the python script =ti-utils/project.py= inside a QGIS2 python console (with the symbol
+    library installed)
+*** Release zip
+    Make a zip file of the =result= directory.
+** Technical notes
+   - Png files are 600 dpi, for images 6x3 mm I use image size of 142x71 pixels
+     with 23,622047 pixel per mm or 23622 dots per meter.
 ** Engineering
 *** Functional Requirements
 **** FR1 Xml library
@@ -41,20 +89,3 @@
        To not be forced to install new fonts on the user computers.
      - Fit criterion
        All character of ESRI fonts are converted into a svg image.
-** XML library
-*** Requirements
-    - QGIS3 in python path
-    - Inkscape
-*** Creation
-    #+BEGIN_SRC sh
-      cd ti-utils/
-      python library.py
-    #+END_SRC
-*** Installation in QGIS2
-    - In =Options - System - SVG Paths=, add the path of the svg directory.
-    - Optional
-      - Create a new group in Style manger e.g. libreria
-    - In =Style Manager - Import=, import the xml =libreria.xml= file.
-      - (optional) save into group libreria
-      - Select all
-      - Import 
