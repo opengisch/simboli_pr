@@ -100,7 +100,7 @@ class SymbologyProject(object):
 if __name__ in ['__main__', '__console__']:
     symbology_project = SymbologyProject()
     # symbology_project.create_layers()
-    # symbology_project.get_layers()
+    symbology_project.get_layers()
 
-    # symbology_project.draw_symbols_from_list(
-    # '/home/mario/workspace/repos/symbology-ti/ti-utils/fase2.txt')
+    symbology_project.draw_symbols_from_list(
+        '/home/mario/workspace/repos/symbology-ti/ti-utils/fase2.txt')
