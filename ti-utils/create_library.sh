@@ -12,8 +12,7 @@ python library.py
 sed -i -- 's/\/home\/mario\/workspace\/repos\/symbology-ti\/result\/libreria\/svg\///g' ../result/libreria/libreria.xml
 
 # Fix very thin lines
-sed -i -- 's/<prop k="line_width" v="0.0352778"/<prop k="line_width" v="0"/g' ../result/libreria/libreria.xml   
-sed -i -- 's/<prop k="outline_width" v="0.0352778"/<prop k="line_width" v="0"/g' ../result/libreria/libreria.xml
+sed -i -- 's/v="0.0352778"/v="0"/g' ../result/libreria/libreria.xml
 
 # Remove emf files
 rm ../result/libreria/svg/*.emf
