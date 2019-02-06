@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+
+  qgis:
+    image: qgis/qgis:final-3_4_4
+    container_name: qgis
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ../.:/shared
+    environment:
+      - DISPLAY=:99
