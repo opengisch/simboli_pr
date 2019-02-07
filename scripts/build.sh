@@ -21,6 +21,9 @@ sed -i -- 's/\/shared\/result\/libreria\/svg\///g' ../result/libreria/libreria.x
 # Fix very thin lines
 sed -i -- 's/v="0.0352778"/v="0"/g' ../result/libreria/libreria.xml
 
+# Remove font information from svg files
+sed -i -E -- 's/font-\w*="[^"]*"//g' ../result/libreria/svg/*.svg
+
 # Remove emf files
 rm -f ../result/libreria/svg/*.emf
 
