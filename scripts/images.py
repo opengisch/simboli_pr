@@ -47,7 +47,7 @@ class Images():
 
                 pixmap = self._create_pixmap_from_symbol(
                     symbol,
-                    self._calculate_scale_factor(symbol, symbol_name)
+                    *self._calculate_scale_factor_padding(symbol, symbol_name)
                 )
 
                 self._save_pixmap_into_png(
@@ -64,12 +64,12 @@ class Images():
         style = QgsStyle().defaultStyle()
         return style.symbol(symbol_name)
 
-    def _create_pixmap_from_symbol(self, symbol, factor):
+    def _create_pixmap_from_symbol(self, symbol, scale_factor, padding):
         context = QgsRenderContext()
-        context.setScaleFactor(factor)
+        context.setScaleFactor(scale_factor)
 
         pixmap = QgsSymbolLayerUtils.symbolPreviewPixmap(
-            symbol, QSize(142, 71), 0, context)
+            symbol, QSize(142, 71), padding, context)
         return pixmap
 
     def _save_pixmap_into_png(self, pixmap, file_name):
@@ -78,101 +78,52 @@ class Images():
         image.setDotsPerMeterY(23622)
         image.save(file_name, "PNG")
 
-    def _calculate_scale_factor(self, symbol, symbol_name):
+    def _calculate_scale_factor_padding(self, symbol, symbol_name):
         factor = 10
+        padding = 0
         if isinstance(symbol, QgsMarkerSymbol):
             factor = (12 / symbol.size()) * 4.6
         elif isinstance(symbol, QgsLineSymbol):
-            factor = 30
+            factor = 7
+            padding = 0
         elif isinstance(symbol, QgsFillSymbol):
             factor = 10
 
         # Special cases
+        # Symbol_code: (scale_factor, padding)
         special_cases = {
-            'P_26_124_0004': 7,
-            'P_26_125_0008': 15,
-            'P_26_125_0009': 15,
-            'P_26_125_0009': 15,
-            'P_26_125_0010': 15,
-            'P_26_125_0011': 15,
-            'P_26_125_0012': 15,
-            'P_26_125_0013': 15,
-            'P_26_125_0014': 15,
-            'P_26_125_0015': 15,
-            'P_26_125_0016': 15,
-            'P_26_125_0017': 15,
-            'P_27_127_0007': 9,
-            'P_31_159_0002': 20,
-            'P_33_167_0002': 10,
-            'L_19_005_0004': 10,
-            'L_19_005_0009': 20,
-            'L_19_006_0005': 20,
-            'L_19_006_0013': 20,
-            'L_19_102_0006': 7,
-            'L_20_099_0001': 10,
-            'L_20_099_0002': 10,
-            'L_20_099_0003': 10,
-            'L_20_099_0004': 10,
-            'L_20_099_0005': 10,
-            'L_20_099_0006': 10,
-            'L_20_099_0007': 10,
-            'L_20_099_0008': 10,
-            'L_20_099_0009': 10,
-            'L_20_099_0010': 10,
-            'L_20_099_0011': 10,
-            'L_20_099_0013': 10,
-            'L_20_099_0014': 10,
-            'L_20_099_0015': 10,
-            'L_20_100_0001': 10,
-            'L_21_105_0010': 10,
-            'L_21_107_0001': 5,
-            'L_21_107_0002': 5,
-            'L_21_107_0003': 10,
-            'L_21_107_0004': 5,
-            'L_21_107_0005': 7,
-            'L_21_107_0006': 10,
-            'L_21_107_0007': 5,
-            'L_21_107_0008': 5,
-            'L_21_107_0009': 10,
-            'L_21_107_0010': 7,
-            'L_21_108_0001': 5,
-            'L_21_110_0001': 5,
-            'L_21_110_0002': 10,
-            'L_21_110_0003': 10,
-            'L_21_110_0004': 5,
-            'L_21_169_0001': 7,
-            'L_22_092_0001': 20,
-            'L_22_092_0002': 20,
-            'L_22_092_0003': 20,
-            'L_22_092_0004': 7,
-            'L_22_092_0005': 10,
-            'L_22_092_0006': 7,
-            'L_22_092_0007': 10,
-            'L_22_092_0008': 7,
-            'L_22_092_0009': 7,
-            'L_22_092_0010': 7,
-            'L_22_092_0011': 7,
-            'L_22_092_0012': 10,
-            'L_22_092_0013': 8,
-            'L_22_093_0011': 10,
-            'L_22_093_0017': 20,
-            'L_22_093_0033': 20,
-            'L_22_093_0034': 20,
-            'L_22_095_0001': 10,
-            'L_22_096_0003': 20,
-            'L_22_097_0001': 10,
-            'L_22_163_0001': 15,
-            'L_22_163_0002': 7,
-            'L_22_163_0003': 15,
-            'L_25_116_0002': 20,
-            'S_01_138_0002': 5,
-            'S_10_041_0004': 5,
+            'P_26_124_0004': (7, 0),
+            'P_26_125_0008': (15, 0),
+            'P_26_125_0009': (15, 0),
+            'P_26_125_0009': (15, 0),
+            'P_26_125_0010': (15, 0),
+            'P_26_125_0011': (15, 0),
+            'P_26_125_0012': (15, 0),
+            'P_26_125_0013': (15, 0),
+            'P_26_125_0014': (15, 0),
+            'P_26_125_0015': (15, 0),
+            'P_26_125_0016': (15, 0),
+            'P_26_125_0017': (15, 0),
+            'P_27_127_0007': (9, 0),
+            'P_31_159_0002': (20, 0),
+            'P_33_167_0002': (10, 0),
+            'L_19_101_0001': (7, 5),
+            'L_19_101_0002': (7, 5),
+            'L_19_101_0003': (7, 5),
+            'L_19_101_0005': (7, 8),
+            'L_21_110_0001': (4, 15),
+            'L_21_110_0004': (5, 10),
+            'L_22_096_0003': (7, 8),
+            'L_22_097_0001': (5, 12),
+            'L_22_163_0001': (7, 13),
+            'S_01_138_0002': (5, 0),
+            'S_10_041_0004': (5, 0)
         }
 
         if symbol_name in special_cases:
             return special_cases[symbol_name]
 
-        return factor
+        return (factor, padding)
 
 
 if __name__ == '__main__':
