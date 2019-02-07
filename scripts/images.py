@@ -175,7 +175,7 @@ class Images():
         return factor
 
 
-if __name__ in ['__main__', '__console__']:
+if __name__ == '__main__':
 
     main_dir_path = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), os.pardir)
