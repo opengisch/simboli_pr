@@ -6,9 +6,26 @@ from qgis.PyQt.QtCore import QSize, QSettings
 from qgis.testing import start_app
 
 
-class SymbologyImages(object):
+class Images():
+    """This class generates png images of symbols using the QGIS API."""
 
-    def save_pngs_from_list_file(self, list_file, output_directory):
+    def __init__(self, list_file, output_directory):
+        """
+        Constructor
+
+        :param list_file: the path of a file containing the list of symbols
+        for which generate the images.
+        :param output_directory: the path of the directory where the images
+        will be stored.
+        """
+        self.list_file = list_file
+        self.output_directory = output_directory
+        start_app()
+
+    def run(self):
+        """
+        Start the images generation
+        """
 
         main_dir_path = os.path.join(
             os.path.dirname(os.path.realpath(__file__)), os.pardir)
@@ -19,34 +36,35 @@ class SymbologyImages(object):
         s.setValue('svg/searchPathsForSVG', svg_paths)
 
         style = QgsStyle.defaultStyle()
-        style.importXml(os.path.join(main_dir_path, 'result/libreria/libreria.xml'))
+        style.importXml(os.path.join(
+            main_dir_path, 'result/libreria/libreria.xml'))
 
-        with open(list_file) as f:
+        with open(self.list_file) as f:
             for i, symbol_name in enumerate(f.readlines()):
 
                 symbol_name = symbol_name.strip()
-                symbol = self.get_symbol(symbol_name)
+                symbol = self._get_symbol(symbol_name)
 
-                pixmap = self.create_pixmap_from_symbol(
+                pixmap = self._create_pixmap_from_symbol(
                     symbol,
-                    self.calculate_scale_factor(symbol, symbol_name)
+                    self._calculate_scale_factor(symbol, symbol_name)
                 )
 
-                self.save_pixmap_into_png(
+                self._save_pixmap_into_png(
                     pixmap,
                     os.path.join(
-                        output_directory,
+                        self.output_directory,
                         symbol_name + ".png"
                     )
                 )
 
-    def get_symbol(self, symbol_name):
+    def _get_symbol(self, symbol_name):
         """Return the QgsSymbol or None if not found"""
 
         style = QgsStyle().defaultStyle()
         return style.symbol(symbol_name)
 
-    def create_pixmap_from_symbol(self, symbol, factor):
+    def _create_pixmap_from_symbol(self, symbol, factor):
         context = QgsRenderContext()
         context.setScaleFactor(factor)
 
@@ -54,13 +72,13 @@ class SymbologyImages(object):
             symbol, QSize(142, 71), 0, context)
         return pixmap
 
-    def save_pixmap_into_png(self, pixmap, file_name):
+    def _save_pixmap_into_png(self, pixmap, file_name):
         image = pixmap.toImage()
         image.setDotsPerMeterX(23622)
         image.setDotsPerMeterY(23622)
         image.save(file_name, "PNG")
 
-    def calculate_scale_factor(self, symbol, symbol_name):
+    def _calculate_scale_factor(self, symbol, symbol_name):
         factor = 10
         if isinstance(symbol, QgsMarkerSymbol):
             factor = (12 / symbol.size()) * 4.6
@@ -159,11 +177,10 @@ class SymbologyImages(object):
 
 if __name__ in ['__main__', '__console__']:
 
-    start_app()
     main_dir_path = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), os.pardir)
 
-    symbology_images = SymbologyImages()
-    symbology_images.save_pngs_from_list_file(
+    images = Images(
         os.path.join(main_dir_path, 'scripts/fase2.txt'),
         os.path.join(main_dir_path, 'result/png'))
+    images.run()
