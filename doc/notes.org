@@ -1,4 +1,3 @@
-* Settings
 * Esri style file reverse engineering
   This file contains my notes about the structure of the Esri style files. The
   base used for the test are the 1203 symbols of the regional planning symbology
@@ -105,9 +104,9 @@
       special codes for the whole symbol. For example the code ~04e6~ that Nyall
       identified as a FillSymbol, I found it in all 3 geometry types.
 
-*** TODO symbols with only a code
-*** TODO export list of all the codes in a symbol 
-*** TODO try to determine each code
+*** symbols with only a code
+*** export list of all the codes in a symbol 
+*** try to determine each code
 ** Analyse in ArcMap
 *** P_26_126_0005
     - I found only fee5
@@ -304,5 +303,94 @@
     4. Support MarkerFillSymbol
     5. Conversion of the result to qgis symbols (Qgis 2.18)
     6. Support PictureMarkerSymbol
-
-
+* Notes on builing
+** Artefacts creation
+*** XML library
+**** Requirements
+     - QGIS3 in python path
+     - Inkscape
+**** Creation
+     #+BEGIN_SRC sh
+       cd ti-utils/
+       ./create_library.sh
+     #+END_SRC
+**** Fix svg images
+     The emf images are not converted perfectly with Inkscape, so I first
+     convert them with Libreoffice and then again with Inkscape to reduce the
+     page size
+     #+BEGIN_SRC sh
+       libreoffice --headless --convert-to svg *.emf
+       inkscape --file P_33_161_0001.svg --export-area-drawing --export-plain-svg P_33_161_0001.svg
+     #+END_SRC
+**** Fix very thin lines
+     Very thin lines are drawn more pale in QGIS than in Arcgis. So I change
+     the 0.0352778 mm lines (0.1 pt in Arcgis) to 0 (QGIS will use the hairline
+     width for 0 mm lines that is darker)
+     #+BEGIN_SRC sh
+       sed -i -- 's/v="0.0352778"/v="0"/g' libreria.xml   
+     #+END_SRC
+**** Remove all the svg path from the xml
+     #+BEGIN_SRC sh
+       sed -i -- 's/\/home\/mario\/workspace\/repos\/symbology-ti\/result\/libreria\/svg\///g' libreria.xml
+     #+END_SRC
+**** Installation in QGIS2
+     - In =Options - System - SVG Paths=, add the path of the svg directory.
+     - Optional
+       - Create a new group in Style manger e.g. libreria
+     - In =Style Manager - Import=, import the xml =libreria.xml= file.
+       - (optional) save into group libreria
+       - Select all
+       - Import 
+*** PNG images
+    Run the python script =ti-utils/images.py= inside a QGIS2 python console (with the symbol
+    library installed) 
+*** QGIS project
+    Run the python script =ti-utils/project.py= inside a QGIS2 python console (with the symbol
+    library installed)
+*** Release zip
+    Make a zip file of the =result= directory.
+** Technical notes
+   - Png files are 600 dpi, for images 6x3 mm I use image size of 142x71 pixels
+     with 23,622047 pixel per mm or 23622 dots per meter.
+* Engineering
+** Functional Requirements
+*** FR1 Xml library
+    The result shall include a QGIS style library xml file containing the 1203
+    ESRI symbols converted.
+    - Rationale
+      To not be dependent of ESRI and to conform to OGC.
+    - Fit criterion
+      A QGIS's style xml file containing a QGIS symbol for all the 1203 original
+      ESRI symbols is into the result product.
+*** FR2 QGIS project
+    The result shall include a QGIS project showing all the symbols.
+    - Rationale
+      To be able to look the rendering of all the symbols.
+    - Fit criterion
+      A QGIS project with at least a geometry drown with each symbol is into the
+      result product.
+*** FR3 png files
+    The result shall include a png image of all symbols.
+    - Rationale
+      These png are to be used into pdf documents
+    - Fit criterion
+      A zip folder with a png for each symbol is into the result product.
+*** FR4 png quality
+    The png images shall be 6x3mm and 300dpi at least and represent correctly
+    the symbol.
+    - Rationale 
+      To ensure a good quality of the documents using this images
+    - Fit criterion
+      --
+*** FR5 Conversion of dimensions
+    The point units of the ESRI symbols are to be converted in 0.35mm in QGIS.
+    - Rationale 
+      In QGIS the unit point doesn't exist
+    - Fit criterion 
+      --
+*** FR6 Font ESRI
+    Characters using ESRI fonts are to be converted in svg images.
+    - Rationale 
+      To not be forced to install new fonts on the user computers.
+    - Fit criterion
+      All character of ESRI fonts are converted into a svg image.
